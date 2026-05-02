@@ -1,21 +1,86 @@
 package com.example;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-
-import javax.swing.*;
+import java.util.*;
 
 public class Game {
 
     // GUI gui;
     WordGettter wordGettter;
+    private ArrayList<ConnectionHandler> players = new ArrayList<>();
+    boolean gameActive = false;
     ArrayList<String> textOneRos = new ArrayList<>();
     String target = "";
-    ArrayList<GUI> guis = new ArrayList<GUI>(); 
+
+    public synchronized void addPlayer(ConnectionHandler p){
+        players.add(p);
+
+        if ((players.size() == 2) && (gameActive == false)){
+            startGame();
+        }
+    }
+
+    public synchronized void removePlayer(ConnectionHandler p){
+        players.remove(p);
+        gameActive = false;
+    }
+
+    private void startGame(){
+                wordGettter = new WordGettter();
+            
+            
+            textOneRos = wordGettter.get50Words();
+
+            target = String.join(" ", textOneRos);
+gameActive = true;
+
+for (ConnectionHandler p : players){
+    p.send("START|" + target);
+}
+    }
+
+    public synchronized void handleInput(ConnectionHandler player, String m){
+        if (gameActive == false){
+            return;
+        }
+
+            for (ConnectionHandler p : players){
+                if (p != player){
+                    p.send("PROGRESS|" + m.length());
+                }
+            }
+
+        if (m.equals(target)){
+            gameActive = false;
+        for (ConnectionHandler p : players){
+            if (p == player){
+                p.send("WIN");
+            }
+            else{
+                p.send("LOSE");
+            }
+            }
+        resetGame();
+        
+        
+        }
+       
+
+            
+        
+
+    }
+
+    private void resetGame() {
+        gameActive = false;
+        target = "";
+    }
 
     // transient -> i don't want to send this information
     // related to serialized things
 
-    public Game(){
+
+
+/*    public Game(){
         
              
             try {
@@ -54,5 +119,6 @@ break;
             }
            
 }
+*/
 
 }

@@ -4,11 +4,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import javax.swing.JFrame;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
+import javax.swing.SwingUtilities;
+
+
 
 public class SocketClientExample {
 
@@ -26,22 +24,58 @@ public class SocketClientExample {
      * information
      * and another thread in charge of receiving information.
      */
-    private String myOld = "";
-    String input;
+
+
+    private ObjectOutputStream oos;
+    private ObjectInputStream ois;
+    private GUI gui;
     
     public SocketClientExample()
-            throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
+            throws Exception {
         // get the localhost IP address, if server is running on some other IP, you need
         // to use that
         InetAddress host = InetAddress.getLocalHost();
         Socket socket = new Socket(host.getHostName(), 9876);
         // write to socket using ObjectOutputStream
-        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-        int curr = 0;
-        GUI gui = new GUI();
+         oos = new ObjectOutputStream(socket.getOutputStream());
+         oos.flush();
+         ois = new ObjectInputStream(socket.getInputStream());
+ 
+         gui = new GUI(this);
+
+
+         startListening();
+            }
+
+            public void send(String m) {
+                try {
+                    oos.writeObject(m);
+                oos.flush();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+            private void startListening() {
+                new Thread(() -> {
+                    try {
+                        while (true) {
+                            String msg = (String) ois.readObject();
+
+                            SwingUtilities.invokeLater(() -> {
+                                handleMessage(msg);
+                            });
+                        }
+                    } catch (Exception e) {
+                        System.out.println("disconnected");
+                    }
+                }).start();
+            }
+
+
         
-        Thread t = new Thread(() -> {
+    /*    Thread t = new Thread(() -> {
         while (true) {
             if (!gui.old.equals(myOld))
                 myOld = gui.old;
@@ -50,29 +84,44 @@ public class SocketClientExample {
                     oos.writeObject(input);
                     oos.flush();
                 } catch (IOException etwo) {
-            }
+            } */
             
             // public static void main(String[] args)
             //         throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {//yea idk why its done like this eier
             //     new SocketClientExample();
             
-        }
-    });
-    Thread t1 = new Thread(() -> {
-        String message = "";
-        try {
-            message = (String)ois.readObject();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        gui.highlightTheirWords(message);
-    });
-    t.start();
-    t1.start();
+
+    // Thread t1 = new Thread(() -> {
+    //     String message = "";
+    //     try {
+    //         message = (String)ois.readObject();
+    //     } catch (ClassNotFoundException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     } catch (IOException e) {
+    //         // TODO Auto-generated catch block
+    //         e.printStackTrace();
+    //     }
+    //     gui.highlightTheirWords(message);
+    // });
+    // t.start();
+    // t1.start();
+
+
+private void handleMessage(String m) {
+    if (m.startsWith("START|")){
+        gui.setWords(m.substring(6));
+    }
+    else if (m.equals("WIN")){
+        gui.winScreen();
+    }
+    else if (m.equals("LOSE")){
+        gui.loseScreen();
+    }
+    else if (m.startsWith("PROGRESS|")){
+        gui.highlightTheirWords(m.substring(9));
+    }
+}
 
         // display via swing
         // JFrame frame = new JFrame("Client Chat");
@@ -109,5 +158,8 @@ public class SocketClientExample {
         // String input = clientText.getText();
         // clientText.setText("");
 
+        public static void main(String[] args) throws Exception {
+            new SocketClientExample();
+        }
+
     }
-}

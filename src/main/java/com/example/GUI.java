@@ -7,44 +7,26 @@ package com.example;
 // Mouse maze 1 vs 1 game where each player has to compete to 
 // complete the maze first, utilizing onMouseDrag() 
 // and nodes on screen that lead players to their final destination
-import java.io.IOException;
-import java.util.regex.Matcher;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
+import java.awt.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 
 public class GUI {
-    boolean win;
+
     public String old = "";
     JTextArea wordsToType;
     JFrame everything;
     JTextArea myTyped;
-    public GUI(){
+    public GUI(SocketClientExample client){
         
-         everything = new JFrame("Player GUIs");
-        try {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-win = false;
-        everything.setTitle("Multitype");
+         everything = new JFrame("Racer GUIs");
+
         everything.setSize(900, 700);
-        everything.setVisible(true);
+   
+        everything.setLayout(new BorderLayout());
         everything.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         //  try {
         //     System.out.println(getClass().toString());
@@ -57,16 +39,29 @@ win = false;
             
         // }
         
-        wordsToType = new JTextArea(10, 30);
+        wordsToType = new JTextArea();
        
         wordsToType.setEditable(false);
+        wordsToType.setText("Waiting...");
+         myTyped = new JTextArea();
 
-        everything.add(wordsToType);
-         myTyped = new JTextArea(10,30);
-        myTyped.setEditable(true);
-        everything.add(myTyped);
+        everything.add(wordsToType, BorderLayout.CENTER);
+        everything.add(myTyped, BorderLayout.SOUTH);
 
+             everything.setVisible(true);
 
+        myTyped.getDocument().addDocumentListener(new DocumentListener() {
+
+            private void update() {
+                client.send(myTyped.getText());
+            }
+
+            public void insertUpdate(DocumentEvent e) { update(); }
+            public void removeUpdate(DocumentEvent e) { update(); }
+            public void changedUpdate(DocumentEvent e) { update(); }
+        });
+
+   
         //   javax.swing.SwingUtilities.invokeLater(new Runnable() {
         //     public void run() {
         //         everything.createAndShowGUI();
@@ -76,19 +71,26 @@ win = false;
     }
     //precondition: the typed variable contains how much the opponent has typed CORRECTLY
     public void highlightTheirWords(String typed){
-        String a = wordsToType.getText().substring(0,typed.length()-1);
-        String b = wordsToType.getText().substring(typed.length()-1);
-        wordsToType.setText("<html><font color=red>"+a+"/font"+b+"/html");
+        SwingUtilities.invokeLater(() -> 
+        everything.setTitle("Enemy: " + typed)
+    );
+       
     }
+
+
     public void setWords(String target){
-        wordsToType.setText(target);
+        SwingUtilities.invokeLater(() -> 
+        wordsToType.setText(target)
+    );
     }
-    public void run(){
+
+
+  /*  public void run(){
         
         while(true){
             // break out 
             if (wordsToType.getText().equals(myTyped.getText())){
-                win = true;
+         
                 break;
             }
             if(!myTyped.getText().equals(old)){
@@ -101,20 +103,25 @@ win = false;
 
             }
         }
+    } */
+
+    public void winScreen(){
+                SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(everything, "YOU WIN!");
+        });
+// ImageIcon image = new ImageIcon("winns.png");
+// JLabel label = new JLabel(image);
+// everything.add(label);
     }
 
-    public boolean getWin(){
-        return win;
-    }
-    public void winScreen(){
-ImageIcon image = new ImageIcon("winns.png");
-JLabel label = new JLabel(image);
-everything.add(label);
-    }
+
     public void loseScreen(){
-ImageIcon image2 = new ImageIcon("losees.png");
-JLabel label2 = new JLabel(image2);
-everything.add(label2);
+                SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(everything, "YOU LOSE!");
+        });
+// ImageIcon image2 = new ImageIcon("losees.png");
+// JLabel label2 = new JLabel(image2);
+// everything.add(label2);
     }
 }
  

@@ -5,9 +5,10 @@ import java.util.Scanner;
 
 
 public class WordGettter{
-      ArrayList<String> words;
+      private ArrayList<String> words = new ArrayList<String>();
+      
 
- public WordGettter() throws FileNotFoundException {
+ public WordGettter() {
     
       //this reads all words from the words doc
       //taken from https://research-says.com/5000-word-list/
@@ -15,22 +16,29 @@ public class WordGettter{
       //the bottom also has some extra words :)
       // -milan
 
-    words = new ArrayList<String>();
+    
+
+    try (InputStream is = getClass().getResourceAsStream("/Words.txt");
+             Scanner sc = new Scanner(is)) {
+
+            while (sc.hasNextLine()) {
+                words.add(sc.nextLine());
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load words", e);
+        }
 
 
       
         // pass the path to the file as a parameter
-        File file = new File("/workspaces/game1/src/main/java/com/example/Words.txt");
+      //  File file = new File("/workspaces/game1/src/main/java/com/example/Words.txt");
       
-        Scanner sc = new Scanner(file);
-
-        while (sc.hasNextLine())
-            words.add(sc.nextLine());
 
         // while(true)
         //   System.out.println(words.get((int)(Math.random()*words.size())));
 
-        sc.close();
+     
         
     }
     public ArrayList<String> get30Words(){

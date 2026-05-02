@@ -1,7 +1,6 @@
 package com.example;
 import java.net.*;
-import java.io.*;
-import java.util.ArrayList;
+
 
 /**
  * This program is a server that takes connection requests on
@@ -21,11 +20,24 @@ public class ChatServerWithThreads {
     public static void main(String[] args) {
 
         Game game = new Game();
+try (ServerSocket server = new ServerSocket(LISTENING_PORT)) {
+            System.out.println("Server running on port " + LISTENING_PORT);
 
-        ServerSocket listener;  // Listens for incoming connections.
-        Socket connection;      // For communication with the connecting program.
+            while (true) {
+                Socket socket = server.accept();
+                System.out.println("Client connected: " + socket.getInetAddress());
 
-        /* Accept and process connections forever, or until some error occurs. */
+                ConnectionHandler handler = new ConnectionHandler(socket, game);
+                handler.start();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        /* //ServerSocket listener;  // Listens for incoming connections.
+        //Socket connection;      // For communication with the connecting program.
+
+        // Accept and process connections forever, or until some error occurs. 
 
         try {
             listener = new ServerSocket(LISTENING_PORT);
@@ -33,7 +45,7 @@ public class ChatServerWithThreads {
             while (true) {
                 connection = listener.accept();
                 // Accept next connection request and handle it.
-                ConnectionHandler h = new ConnectionHandler(connection);
+                ConnectionHandler h = new ConnectionHandler(connection, game);
                 h.start();
                  
             }
@@ -42,7 +54,7 @@ public class ChatServerWithThreads {
             System.out.println("Sorry, the server has shut down.");
             System.out.println("Error:  " + e);
             return;
-        }
+        }*/
 
     }  // end main()
 
@@ -51,7 +63,7 @@ public class ChatServerWithThreads {
      *  Defines a thread that handles the connection with one
      *  client.
      */
-    private static class ConnectionHandler extends Thread {
+  /*  private static class ConnectionHandler extends Thread {
         private static int clientIdCount = 0;
         private int clientId;
         private static volatile ArrayList<ConnectionHandler> handlers = new ArrayList<ConnectionHandler>(); //This is shared among all the connection handlers
@@ -114,7 +126,7 @@ public class ChatServerWithThreads {
                 }
             }
         }
-    }
+    }*/
 
 
 }
