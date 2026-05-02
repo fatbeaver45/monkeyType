@@ -27,6 +27,7 @@ public class SocketClientExample {
      * and another thread in charge of receiving information.
      */
     private String myOld = "";
+    String input;
     
     public SocketClientExample()
             throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
@@ -39,7 +40,7 @@ public class SocketClientExample {
         ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
         int curr = 0;
         GUI gui = new GUI();
-        String input;
+        
         Thread t = new Thread(() -> {
         while (true) {
             if (!gui.old.equals(myOld))
@@ -51,10 +52,10 @@ public class SocketClientExample {
                 } catch (IOException etwo) {
             }
             
-            public static void main(String[] args)
-                    throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {//yea idk why its done like this eier
-                new SocketClientExample();
-            }
+            // public static void main(String[] args)
+            //         throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {//yea idk why its done like this eier
+            //     new SocketClientExample();
+            
         }
     });
     Thread t1 = new Thread(() -> {

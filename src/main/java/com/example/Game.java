@@ -1,4 +1,5 @@
 package com.example;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -17,7 +18,12 @@ public class Game {
     public Game(){
         
              
-            wordGettter = new WordGettter();
+            try {
+                wordGettter = new WordGettter();
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             textOneRos = wordGettter.get50Words();
             for(int i = 0; i < textOneRos.size(); i++){
                 target+=(textOneRos.get(i)+" ");

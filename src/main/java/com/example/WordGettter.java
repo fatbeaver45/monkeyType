@@ -5,9 +5,9 @@ import java.util.Scanner;
 
 
 public class WordGettter{
-      ArrayList<String> words = new ArrayList<String>();
+      ArrayList<String> words;
 
- public static void main(String[] args) throws FileNotFoundException {
+ public WordGettter() throws FileNotFoundException {
     
       //this reads all words from the words doc
       //taken from https://research-says.com/5000-word-list/
@@ -15,12 +15,12 @@ public class WordGettter{
       //the bottom also has some extra words :)
       // -milan
 
-    ArrayList<String> words = new ArrayList<String>();
+    words = new ArrayList<String>();
 
 
       
         // pass the path to the file as a parameter
-        File file = new File("/workspaces/codespaces-blank/Words.txt");
+        File file = new File("/workspaces/game1/src/main/java/com/example/Words.txt");
       
         Scanner sc = new Scanner(file);
 
@@ -43,8 +43,9 @@ public class WordGettter{
 
     public ArrayList<String> get50Words(){
         ArrayList<String> a = new ArrayList<>();
+        System.out.println(words.size());
         for(int i = 0; i < 50; i++){
-            a.add(words.get((int)(Math.random()*words.size())));
+            a.add(words.get( (int) (Math.random()* (words.size()) ) )); 
         }
         return a;
     }
