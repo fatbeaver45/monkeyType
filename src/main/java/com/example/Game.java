@@ -14,14 +14,19 @@ public class Game {
     public synchronized void addPlayer(ConnectionHandler p){
         players.add(p);
 
-        if ((players.size() == 2) && (gameActive == false)){
+        if (gameActive == false) {
             startGame();
+        } else if (!target.isEmpty()) {
+            p.send("START|" + target);
         }
     }
 
     public synchronized void removePlayer(ConnectionHandler p){
         players.remove(p);
         gameActive = false;
+        if (players.isEmpty()) {
+            target = "";
+        }
     }
 
     private void startGame(){
@@ -45,7 +50,7 @@ for (ConnectionHandler p : players){
 
             for (ConnectionHandler p : players){
                 if (p != player){
-                    p.send("PROGRESS|" + m.length());
+                    p.send("PROGRESS|" + m);
                 }
             }
 

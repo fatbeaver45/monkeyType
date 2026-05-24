@@ -1,6 +1,7 @@
 package com.example;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -18,7 +19,7 @@ public class WordGettter{
 
     
 
-    try (InputStream is = getClass().getResourceAsStream("/Words.txt");
+    try (InputStream is = Objects.requireNonNull(getClass().getResourceAsStream("Words.txt"), "Words.txt not found");
              Scanner sc = new Scanner(is)) {
 
             while (sc.hasNextLine()) {
