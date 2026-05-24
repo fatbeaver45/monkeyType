@@ -56,6 +56,8 @@ public class GUI {
         wordsToType.setLineWrap(true);
         wordsToType.setWrapStyleWord(true);
         wordsToType.setFont(new Font("Sans Serif", Font.PLAIN, 25));
+        wordsToType.setFocusable(false);
+
 
         theirTyped = new JTextArea();
         theirTyped.setBorder(redLine);
