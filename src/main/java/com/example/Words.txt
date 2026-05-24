@@ -215,7 +215,6 @@ hear
 heart
 heat
 heavy
-hell
 help
 here
 high
@@ -1200,7 +1199,6 @@ bruise
 bubble
 bud
 bulge
-bullshit
 bum
 bun
 bundle
@@ -1493,7 +1491,6 @@ shareholder
 shatter
 shepherd
 shilling
-shit
 shorthand
 shorts
 shrink

@@ -31,7 +31,7 @@ public class GUI {
 
         everything = new JFrame("The blue box is where you type!");
 
-        everything.setSize(900, 700);
+        everything.setSize(600, 700);
 
         everything.setLayout(new BorderLayout());
         everything.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
