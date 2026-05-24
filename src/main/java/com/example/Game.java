@@ -14,7 +14,7 @@ public class Game {
     public synchronized void addPlayer(ConnectionHandler p){
         players.add(p);
 
-        if (gameActive == false) {
+        if (gameActive == false && players.size() ==2 ) {
             startGame();
         } else if (!target.isEmpty()) {
             p.send("START|" + target);

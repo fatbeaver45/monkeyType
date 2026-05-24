@@ -190,19 +190,15 @@ public class GUI {
 
     public void winScreen() {
         SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(everything, "YOU WIN!");
+            ImageIcon image = new ImageIcon("src/main/java/com/example/winns.png");
+            JOptionPane.showMessageDialog(everything, new JLabel(image), "YOU WIN!", JOptionPane.PLAIN_MESSAGE);
         });
-        // ImageIcon image = new ImageIcon("winns.png");
-        // JLabel label = new JLabel(image);
-        // everything.add(label);
     }
 
     public void loseScreen() {
         SwingUtilities.invokeLater(() -> {
-            JOptionPane.showMessageDialog(everything, "YOU LOSE!");
+            ImageIcon image = new ImageIcon("src/main/java/com/example/losees.png");
+            JOptionPane.showMessageDialog(everything, new JLabel(image), "YOU LOSE!", JOptionPane.PLAIN_MESSAGE);
         });
-        // ImageIcon image2 = new ImageIcon("losees.png");
-        // JLabel label2 = new JLabel(image2);
-        // everything.add(label2);
     }
 }
